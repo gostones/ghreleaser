@@ -1,0 +1,44 @@
+# Make sure to check the documentation at http://goreleaser.com
+project_name: ${APP_NAME}
+dist: dist/${APP_NAME}
+
+before:
+  hooks:
+    - go mod download
+builds:
+-
+  main: ./cmd/${APP_NAME}
+  env:
+    - CGO_ENABLED=0
+    - GO111MODULE=on
+  ldflags:
+    - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
+    - -extldflags "-static"
+  goos:
+    - darwin
+    - linux
+    - windows
+  goarch:
+    - amd64
+    # - 386
+  # hooks:
+  #   pre: rice embed-go
+  #   post: ./script.sh
+# archive:
+#   replacements:
+#     darwin: Darwin
+#     linux: Linux
+#     windows: Windows
+#     386: i386
+#     amd64: x86_64
+checksum:
+    name_template: "{{ .ProjectName }}_checksums.txt"
+  # name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
