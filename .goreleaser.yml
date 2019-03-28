@@ -43,4 +43,4 @@ changelog:
     - '^docs:'
     - '^test:'
 release:
-  # disable: true
+  disable: true
